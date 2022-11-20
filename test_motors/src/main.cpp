@@ -42,7 +42,8 @@ void task_motor1(void* param)
             motor1.fwd(255);
             if ((encoder.getCount()/2) >= 30000)
             {  
-                state == 1;
+                Serial << "Going to state 1";
+                state = 1;
             } 
         }
         else if (state == 1)
