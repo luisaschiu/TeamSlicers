@@ -47,15 +47,15 @@ PushMotor::PushMotor(int In1pinB, int In2pinB, int PWMpinB, int STBYpin)
 
 void PushMotor::fwd(int speed)
 {
-    digitalWrite(p_In1B, HIGH);
-    digitalWrite(p_In2B, LOW);
+    digitalWrite(p_In1B, LOW);
+    digitalWrite(p_In2B, HIGH);
     analogWrite(PWM_B, speed);
 }
 
 void PushMotor::rev(int speed)
 {
-   digitalWrite(p_In1B, LOW);
-   digitalWrite(p_In2B, HIGH);
+   digitalWrite(p_In1B, HIGH);
+   digitalWrite(p_In2B, LOW);
    analogWrite(PWM_B, speed);
 }
 

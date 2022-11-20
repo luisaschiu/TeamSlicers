@@ -3,10 +3,10 @@
 #include <TB6612.h>
 #include <ESP32Encoder.h>
 
-#define AIN1 25
-#define BIN1 26
-#define AIN2 33
-#define BIN2 27
+#define AIN1 25 //
+#define BIN1 26 // Green Wire
+#define AIN2 33 //
+#define BIN2 27 // Orange Wire
 #define PWMA 32
 #define PWMB 14
 #define STBY 4
@@ -33,16 +33,19 @@ PushMotor motor1 = PushMotor(BIN1, BIN2, PWMB, STBY);
 void task_motor1(void* param)
 {
     int state = 0;
-    Serial << "Going to state 0";
+    int counter = 0;
+    //Serial << "Going to state 0";
     for(;;)
     {
         if (state == 0)
         {
-            Serial << "In state 0";
+        //    Serial << "In state 0";
             motor1.fwd(255);
-            if ((encoder.getCount()/2) >= 1100)
+            counter ++;
+            Serial << counter;
+        //    if (counter == 40) // counter = 40, unloaded: 2 Motor rev = 1 in travel
+            if (counter == 65) // counter = 65, loaded: 1/8 in travel
             {  
-                Serial << "Going to state 1";
                 state = 1;
             } 
         }
@@ -50,8 +53,12 @@ void task_motor1(void* param)
         {
             motor1.stop();
             Serial << "MOT STOP";
+            state = 2;
         }
-        vTaskDelay(1000/portTICK_PERIOD_MS); //Delay for 10 sec
+        else if (state == 2)
+        {
+        }
+     vTaskDelay(100/portTICK_PERIOD_MS); //Delay for 100 ms
     }
 }
 
@@ -72,8 +79,9 @@ void setup()
   // Begin Serial port
   Serial.begin(115200);
   // Create task objects and run tasks
-  xTaskCreate (task_encoder, "Encoder", 5000, NULL, 1, NULL);
-  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 2, NULL);
+  //xTaskCreate (task_encoder, "Encoder", 5000, NULL, 1, NULL);
+  //xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 2, NULL);
+  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 1, NULL);
 }
 
 void loop() 
