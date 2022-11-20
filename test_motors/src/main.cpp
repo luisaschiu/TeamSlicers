@@ -40,7 +40,7 @@ void task_motor1(void* param)
         {
             Serial << "In state 0";
             motor1.fwd(255);
-            if ((encoder.getCount()/2) >= 4097)
+            if ((encoder.getCount()/2) >= 1100)
             {  
                 Serial << "Going to state 1";
                 state = 1;
