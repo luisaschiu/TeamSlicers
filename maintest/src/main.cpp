@@ -5,9 +5,9 @@
 #include <taskshare.h>
 #include <shares.h>
 
-#define AIN1 25 //
+#define AIN1 25 // Blue Wire
 #define BIN1 26 // Green Wire
-#define AIN2 33 //
+#define AIN2 33 // Black Wire
 #define BIN2 27 // Orange Wire
 #define PWMA 32
 #define PWMB 14
