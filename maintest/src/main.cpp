@@ -99,7 +99,7 @@ void task_ultrasonic(void* param)
     {
         length = ultrasonic.measure();
         Serial << length << endl;
-        vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
+        vTaskDelay(30/portTICK_PERIOD_MS); //Delay for 30 ms
     }
 }
 

@@ -13,10 +13,10 @@ class HCSR04
 
   private:
   // Defines variables for HC-SR04
-  int trigPin;
-  int echoPin;
+  int trig_pin;
+  int echo_pin;
   long duration; // variable for the duration of sound wave travel
-  int distance; // variable for the distance measurement
+  float distance; // variable for the distance measurement
 
 };
 
