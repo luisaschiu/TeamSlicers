@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <PrintStream.h>
 #include <TB6612.h>
-//#include <HCSR04.h>
+#include <HCSR04.h>
 
 #define AIN1 25 //
 #define BIN1 26 // Green Wire
@@ -13,6 +13,8 @@
 #define CH_A 0 // Yellow Wire ENCODER 
 #define CH_B 15 // Blue Wire ENCODER 
 #define HOMELIMIT_PIN 34
+#define trigPin 17
+#define echoPin 16
 
 PushMotor motor1 = PushMotor(BIN1, BIN2, PWMB, STBY);
 
@@ -88,12 +90,25 @@ void task_motor2(void* param)
     }
 }
 
+HCSR04 ultrasonic = HCSR04(trigPin, echoPin);
+
+void task_ultrasonic(void* param)
+{
+    float length;
+    for(;;)
+    {
+        length = ultrasonic.measure();
+        Serial << length << endl;
+        vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
+    }
+}
+
 void setup() 
 {
   // Begin Serial port
   Serial.begin(115200);
   // Create task objects and run tasks
-  //xTaskCreate (task_encoder, "Encoder", 5000, NULL, 1, NULL);
+  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
   xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 2, NULL);
   //xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 1, NULL);
 }

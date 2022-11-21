@@ -1,23 +1,22 @@
 #include <Arduino.h>
+#include <HCSR04.h>
+#include <PrintStream.h>
 
-#define trigPin 17
-#define echoPin 16
+HCSR04::HCSR04(int p_trig, int p_echo)
+{
+  trigPin = p_trig;
+  echoPin = p_echo;
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
+  pinMode(trigPin, INPUT); // Sets the echoPin as an INPUT
 
-
+}
 // Defines variables for HC-SR04
 long duration; // variable for the duration of sound wave travel
-int distance; // variable for the distance measurement
+float distance; // variable for the distance measurement
 
 
-void setup() {
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
-  pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
-  Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
-}
-
-void loop() {
-  // HC-SR04 Sensor
-
+float HCSR04::measure()
+{
   // Clears the trigPin condition
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -30,9 +29,7 @@ void loop() {
   // Calculating the distance
   distance = duration * 0.034 / 2*100; // Speed of sound wave divided by 2 (go and back)
   // Displays the distance on the Serial Monitor
-  Serial.print("Distance: ");
-  Serial.print(distance);
-  Serial.println("mm");
-
+  // Serial << distance << endl;
+  return distance; // distance in mm
 
 }

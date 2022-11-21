@@ -15,8 +15,6 @@ class BladeMotor
     //variables for the 2 inputs, PWM input, Offset value, and the Standby pin
 	int p_In1A, p_In2A, PWM_A, Standby;
 
-    int index = 0;
-
 };
 
 class PushMotor
