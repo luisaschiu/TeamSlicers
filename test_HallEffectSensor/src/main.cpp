@@ -6,7 +6,7 @@ void setup()
 {
   Serial.begin(115200);
   int state = 0;
-  pinMode(HallEff_Sensor, INPUT_PULLUP);
+  pinMode(HallEff_Sensor, INPUT);
   for (;;)
   {
   state = digitalRead(HallEff_Sensor);

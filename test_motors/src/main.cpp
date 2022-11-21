@@ -44,7 +44,7 @@ void task_motor1(void* param)
             counter ++;
             Serial << counter;
         //    if (counter == 40) // counter = 40, unloaded: 2 Motor rev = 1 in travel
-            if (counter == 65) // counter = 65, loaded: 1/8 in travel
+            if (counter == 65) // counter = 65, loaded: 1 in travel
             {  
                 state = 1;
             } 
@@ -66,10 +66,11 @@ BladeMotor motor2 = BladeMotor(AIN1, AIN2, PWMA, STBY);
 
 void task_motor2(void* param)
 {
-    int state = 0;
+    //int state = 0;
     for(;;)
     {
         motor2.fwd(255);
+        Serial << "MOTOR ON";
         vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
     }
 }
