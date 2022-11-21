@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <PrintStream.h>
 #include <TB6612.h>
-#include <ESP32Encoder.h>
+//#include <HCSR04.h>
 
 #define AIN1 25 //
 #define BIN1 26 // Green Wire
@@ -13,21 +13,6 @@
 #define CH_A 0 // Yellow Wire ENCODER 
 #define CH_B 15 // Blue Wire ENCODER 
 #define HOMELIMIT_PIN 34
- 
-ESP32Encoder encoder;
- 
-void task_encoder(void* param)
-{ 
-    encoder.attachHalfQuad ( CH_A, CH_B );
-    ESP32Encoder::useInternalWeakPullResistors=UP;
-    encoder.setCount (0); 
-    for (;;)
-    {
-        long newPosition = encoder.getCount() / 2;
-        Serial.println(newPosition);
-        vTaskDelay(80/portTICK_PERIOD_MS); //Delay for 50 ms
-    }
-}
 
 PushMotor motor1 = PushMotor(BIN1, BIN2, PWMB, STBY);
 
