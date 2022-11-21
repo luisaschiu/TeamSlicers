@@ -2,6 +2,8 @@
 #include <PrintStream.h>
 #include <TB6612.h>
 #include <HCSR04.h>
+#include <taskshare.h>
+#include <shares.h>
 
 #define AIN1 25 //
 #define BIN1 26 // Green Wire
@@ -16,15 +18,18 @@
 #define trigPin 17
 #define echoPin 16
 
+
+Share<float> distance ("HCSR04 Output");
+
 PushMotor motor1 = PushMotor(BIN1, BIN2, PWMB, STBY);
 
 void task_motor1(void* param)
 {
-    int state = 1;
+    int state = 2;
     int counter = 0;
-    //Serial << "Going to state 0";
     for(;;)
     {
+        distance.get();
         if (state == 1)
         {
             motor1.rev(255);
@@ -36,7 +41,17 @@ void task_motor1(void* param)
         else if (state == 2)
         {
             motor1.stop();
-            state = 5;
+            // if ready_flag == true;
+            state = 3;
+        }
+        else if (state == 3)
+        {
+            motor1.rev(255);
+            Serial << distance.get() << endl;
+            if (distance.get() <= 2.00)  // UPDATE VALUE TO PUSH OBJECT TO BLADE
+                {
+                    state = 8;
+                }
         }
         else if (state == 5)
         {
@@ -85,20 +100,19 @@ void task_motor2(void* param)
     for(;;)
     {
         motor2.fwd(255);
-        Serial << "MOTOR ON";
         vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
     }
 }
 
 HCSR04 ultrasonic = HCSR04(trigPin, echoPin);
-
 void task_ultrasonic(void* param)
 {
-    float length;
+    float measurement;
     for(;;)
     {
-        length = ultrasonic.measure();
-        Serial << length << endl;
+        measurement = ultrasonic.measure();
+        distance.put(measurement);
+        Serial << measurement << endl;
         vTaskDelay(30/portTICK_PERIOD_MS); //Delay for 30 ms
     }
 }
@@ -109,8 +123,8 @@ void setup()
   Serial.begin(115200);
   // Create task objects and run tasks
   xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
-  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 2, NULL);
-  //xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 1, NULL);
+  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
+  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
 }
 
 void loop() 

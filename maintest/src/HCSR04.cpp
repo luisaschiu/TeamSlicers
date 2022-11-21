@@ -12,7 +12,7 @@ HCSR04::HCSR04(int p_trig, int p_echo)
 }
 // Defines variables for HC-SR04
 long duration; // variable for the duration of sound wave travel
-float distance; // variable for the distance measurement
+float out_dist; // variable for the distance measurement
 
 
 float HCSR04::measure()
@@ -27,9 +27,9 @@ float HCSR04::measure()
   // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echo_pin, HIGH);
   // Calculating the distance
-  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  out_dist = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
   // Displays the distance on the Serial Monitor
   //Serial << distance << endl;
-  return distance/2.54; // distance in inches
+  return out_dist/2.54; // distance in inches
 
 }

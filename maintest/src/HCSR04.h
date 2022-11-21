@@ -16,7 +16,7 @@ class HCSR04
   int trig_pin;
   int echo_pin;
   long duration; // variable for the duration of sound wave travel
-  float distance; // variable for the distance measurement
+  float out_dist; // variable for the distance measurement
 
 };
 
