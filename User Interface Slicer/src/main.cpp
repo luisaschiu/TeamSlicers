@@ -126,10 +126,12 @@ void handle_DocumentRoot ()
     String a_str;
     HTML_header (a_str, "ESP32 Web Server Test");
     a_str += "<body>\n<div id=\"webpage\">\n";
-    a_str += "<h1>Test Main Page</h1>\n";
-    a_str += "...or is it Main Test Page?\n";
-    a_str += "<p><p> <a href=\"/toggle\">Start</a>\n";
-    a_str += "<p><p> <a href=\"/csv\">Show some data in CSV format</a>\n";
+    a_str += "<h1>Slice and Dice</h1>\n";
+    a_str += "Welcome!\n";
+    a_str += "recommended by top chefs such as Gordon Ramsey snd Dr.Ridgely \n";
+    a_str += "<p><p> <a href=\"/home_push\">Click here to home device pusher</a>\n";
+    a_str += "<p><p> <a href=\"/home_blade\">Click here to home blade </a>\n";
+    a_str += "<p><p> <a href=\"/home_done\">Click here to continue </a>\n";
     a_str += "</div>\n</body>\n</html>\n";
 
     server.send (200, "text/html", a_str); 
@@ -151,25 +153,53 @@ void handle_NotFound (void)
  *           @c http://server.address/toggle as the web address request from a
  *           browser.
  */
-void handle_are_u_ready_rumble (void)
+void handle_home_blade (void)
+{
+    String home_blade = "<!DOCTYPE html> <html> <head>\n";
+   // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
+    home_blade += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
+    home_blade += "Homing Blade\n" ;
+    server.send (200, "text/html", home_blade); // needed to create string to an HTML.
+}
+void handle_home_push (void)
+{
+    String home_push = "<!DOCTYPE html> <html> <head>\n";
+   // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
+    home_push += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
+    home_push += "Homing Pusher" ;
+    server.send (200, "text/html", home_push); // needed to create string to an HTML.
+}
+void handle_home_done (void)
 {
     // This variable must be declared static so that its value isn't forgotten
     // each time this function runs. BUG: It takes two requests to the toggle
     // page before the LED turns on, after which it toggles as expected.
+    // sendsend flag to pusher motor to home
+    // recieve flag that home is complete. 
     static bool state = false;
 
     digitalWrite (ledPin, state);
     state = !state;
 
-    String toggle_page = "<!DOCTYPE html> <html> <head>\n";
+    String home_done = "<!DOCTYPE html> <html> <head>\n";
    // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
-    toggle_page += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
-    toggle_page += "<p><p> <a href=\"/toggle\">Start</a>\n" ; // start link 
-    toggle_page += "</body> </html>";
+    home_done += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
+    home_done += "Load device with fruit\n";
+    home_done += "<p><p> <a href=\"/home_done\">Click Here Once Loaded</a>\n" ; // start link 
+    home_done += "</body> </html>";
 
-    server.send (200, "text/html", toggle_page); // needed to create string to an HTML.
+    server.send (200, "text/html", home_done); // needed to create string to an HTML.
 }
+void handle_thick_sel (void)
+{    String thick_sel = "<!DOCTYPE html> <html> <head>\n";
+   // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
+    thick_sel += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
+    thick_sel += "Load device with fruit\n";
+    thick_sel += "<p><p><p> <a href=\"/home_done\">1/4 inch</a>\n" ; // start link 
+    thick_sel += "</body> </html>";
 
+    server.send (200, "text/html", thick_sel); // needed to create string to an HTML.
+}
 
 /** @brief   Show some simulated data when asked by the web server.
  *  @details The contrived data is sent in a relatively efficient Comma
@@ -215,8 +245,11 @@ void task_webserver (void* p_params)
     // is accessed as a global object because not only this function but also
     // the page handling functions referenced below need access to the server
     server.on ("/", handle_DocumentRoot);
-    server.on ("/toggle", handle_are_u_ready_rumble);
     server.on ("/csv", handle_CSV);
+    server.on ("/home_blade", handle_home_blade);
+    server.on ("/home_push", handle_home_push);
+    server.on ("/home_done", handle_home_done);
+    server.on ("/home_done", handle_thick_sel);
     server.onNotFound (handle_NotFound);
 
     // Get the web server running
