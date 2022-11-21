@@ -12,7 +12,7 @@ int distance; // variable for the distance measurement
 void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
-  Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
+  Serial.begin(115200); // // Serial Communication is starting with 115200 of baudrate speed
 }
 
 void loop() {
