@@ -38,7 +38,6 @@ void task_motor1(void* param)
     int counter = 0;
     for(;;)
     {
-        distance.get();
         if (state == 0)
         {
             motor1.stop();
