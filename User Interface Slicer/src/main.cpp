@@ -185,7 +185,7 @@ void handle_home_done (void)
    // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
     home_done += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
     home_done += "Load device with fruit\n";
-    home_done += "<p><p> <a href=\"/home_done\">Click Here Once Loaded</a>\n" ; // start link 
+    home_done += "<p><p> <a href=\"/thick_sel\">Click Here Once Loaded</a>\n" ; // start link 
     home_done += "</body> </html>";
 
     server.send (200, "text/html", home_done); // needed to create string to an HTML.
@@ -195,12 +195,59 @@ void handle_thick_sel (void)
    // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
     thick_sel += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
     thick_sel += "Load device with fruit\n";
-    thick_sel += "<p><p><p> <a href=\"/home_done\">1/4 inch</a>\n" ; // start link 
+    thick_sel += "<p><p><p> <a href=\"/quarter_cut\">1/4 inch</a>\n" ; // start link 
+    thick_sel += "<p><p><p> <a href=\"/half_cut\">1/2 inch</a>\n" ;
+    thick_sel += "<p><p><p> <a href=\"/inch_cut\">1 inch</a>\n" ;
     thick_sel += "</body> </html>";
 
     server.send (200, "text/html", thick_sel); // needed to create string to an HTML.
 }
 
+void handle_quarter  (void)
+{
+    String quarter_cut = "<!DOCTYPE html> <html> <head>\n";
+    quarter_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
+    quarter_cut += "Postioning...\n";
+    quarter_cut += "CAUTION: Wait till Positioning is Complete before continuing\n";
+    quarter_cut += "<p><p><p> <a href=\"/ready_cut\">to cut</a>\n" ;
+    quarter_cut += "</body> </html>";
+
+    server.send (200, "text/html", quarter_cut);
+}
+void handle_half (void)
+{
+    String half_cut = "<!DOCTYPE html> <html> <head>\n";
+    half_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
+    half_cut += "Postioning...\n";
+    half_cut += "CAUTION: Wait till Positioning is Complete before continuing\n";
+    half_cut += "<p><p><p> <a href=\"/ready_cut\">to cut</a>\n" ;
+    half_cut += "</body> </html>";
+
+    server.send (200, "text/html", half_cut);
+}
+void handle_inch (void)
+{
+    String inch_cut = "<!DOCTYPE html> <html> <head>\n";
+    inch_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
+    inch_cut += "Postioning...\n";
+    inch_cut += "CAUTION: Wait till Positioning is Complete before continuing\n";
+    inch_cut += "<p><p><p> <a href=\"/ready_cut\">to cut</a>\n" ;
+    inch_cut += "</body> </html>";
+    
+    server.send (200, "text/html", inch_cut);
+
+}
+
+void handle_cut (void)
+{
+    String ready_cut = "<!DOCTYPE html> <html> <head>\n";
+    ready_cut += "Cutting...";
+    ready_cut += "Return back to home page once fully cut.\n";
+    ready_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
+    
+    server.send (200, "text/html", ready_cut);
+    
+}
 /** @brief   Show some simulated data when asked by the web server.
  *  @details The contrived data is sent in a relatively efficient Comma
  *           Separated Variable (CSV) format which is easily read by Matlab(tm)
@@ -249,7 +296,11 @@ void task_webserver (void* p_params)
     server.on ("/home_blade", handle_home_blade);
     server.on ("/home_push", handle_home_push);
     server.on ("/home_done", handle_home_done);
-    server.on ("/home_done", handle_thick_sel);
+    server.on ("/thick_sel", handle_thick_sel);
+    server.on ("/quarter_cut", handle_quarter);
+    server.on ("/half_cut", handle_half);
+    server.on ("/inch_cut", handle_inch);
+    server.on ("/ready_cut", handle_cut);
     server.onNotFound (handle_NotFound);
 
     // Get the web server running
