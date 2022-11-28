@@ -45,7 +45,7 @@ void task_motor1(void* param)
             {
                 state = 1;
             }
-            else if (analogRead(HOMEPUSHLIMIT_PIN) > 0)
+            else if ((home_pusher_flag.get() == true) and (analogRead(HOMEPUSHLIMIT_PIN) > 0))
             {
                 state = 2;
             }
@@ -240,9 +240,10 @@ void setup()
   // Begin Serial port
   Serial.begin(115200);
   // Create task objects and run tasks
-  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
   xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
   xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
+  //xTaskCreate(task_user, "User Interface", 5000, NULL, 3, NULL);
+  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
 }
 
 void loop() 
