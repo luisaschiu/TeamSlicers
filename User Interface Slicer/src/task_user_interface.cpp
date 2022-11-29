@@ -17,6 +17,7 @@
 #include "PrintStream.h"
 #include <WiFi.h>
 #include <WebServer.h>
+#include "shares.h"
 
 // #define USE_LAN to have the ESP32 join an existing Local Area Network or 
 // #undef USE_LAN to have the ESP32 act as an access point, forming its own LAN
