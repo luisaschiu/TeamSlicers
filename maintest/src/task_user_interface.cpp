@@ -12,11 +12,12 @@
  *  @date   2022-Nov-04 Modified for ME507 use by Ridgely
  *  @copyright 2022 by the authors, released under the MIT License.
  */
-
+#include <task_user_interface.h>
 #include <Arduino.h>
 #include "PrintStream.h"
 #include <WiFi.h>
 #include <WebServer.h>
+#include "shares.h"
 
 // #define USE_LAN to have the ESP32 join an existing Local Area Network or 
 // #undef USE_LAN to have the ESP32 act as an access point, forming its own LAN
@@ -128,7 +129,7 @@ void handle_DocumentRoot ()
     a_str += "<body>\n<div id=\"webpage\">\n";
     a_str += "<h1>Slice and Dice</h1>\n";
     a_str += "Welcome!\n";
-    a_str += "recommended by top chefs such as Gordon Ramsey snd Dr.Ridgely \n";
+    a_str += "Recommended by top chefs such as Gordon Ramsey and Dr.Ridgely \n";
     a_str += "<p><p> <a href=\"/home_push\">Click here to home device pusher</a>\n";
     a_str += "<p><p> <a href=\"/home_blade\">Click here to home blade </a>\n";
     a_str += "<p><p> <a href=\"/home_done\">Click here to continue </a>\n";
@@ -155,46 +156,40 @@ void handle_NotFound (void)
  */
 void handle_home_blade (void)
 {
+    home_blade_flag.put(true);
     String home_blade = "<!DOCTYPE html> <html> <head>\n";
    // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
-    home_blade += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
+    home_blade += "</head> <body> <p> <a href='/'>Back to Main Page</a></p>"; // back to main link
     home_blade += "Homing Blade\n" ;
     server.send (200, "text/html", home_blade); // needed to create string to an HTML.
 }
 void handle_home_push (void)
 {
+    home_pusher_flag.put(true);
     String home_push = "<!DOCTYPE html> <html> <head>\n";
    // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
-    home_push += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
+    home_push += "</head> <body> <p> <a href='/'>Back to Main Page</a></p>"; // back to main link
     home_push += "Homing Pusher" ;
     server.send (200, "text/html", home_push); // needed to create string to an HTML.
 }
 void handle_home_done (void)
 {
-    // This variable must be declared static so that its value isn't forgotten
-    // each time this function runs. BUG: It takes two requests to the toggle
-    // page before the LED turns on, after which it toggles as expected.
-    // sendsend flag to pusher motor to home
-    // recieve flag that home is complete. 
-    static bool state = false;
-
-    digitalWrite (ledPin, state);
-    state = !state;
 
     String home_done = "<!DOCTYPE html> <html> <head>\n";
    // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
-    home_done += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
-    home_done += "Load device with fruit\n";
+    home_done += "</head> <body> <p> <a href='/'>Back to Main Page</a></p>"; // back to main link
+    home_done += "Load Device With Fruit\n";
     home_done += "<p><p> <a href=\"/thick_sel\">Click Here Once Loaded</a>\n" ; // start link 
     home_done += "</body> </html>";
 
     server.send (200, "text/html", home_done); // needed to create string to an HTML.
 }
 void handle_thick_sel (void)
-{    String thick_sel = "<!DOCTYPE html> <html> <head>\n";
-   // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
-    thick_sel += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
-    thick_sel += "Load device with fruit\n";
+{   
+    start_flag.put(true);
+    String thick_sel = "<!DOCTYPE html> <html> <head>\n";
+    //thick_sel += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
+    thick_sel += "Select Desired Thickness\n";
     thick_sel += "<p><p><p> <a href=\"/quarter_cut\">1/4 inch</a>\n" ; // start link 
     thick_sel += "<p><p><p> <a href=\"/half_cut\">1/2 inch</a>\n" ;
     thick_sel += "<p><p><p> <a href=\"/inch_cut\">1 inch</a>\n" ;
@@ -205,94 +200,59 @@ void handle_thick_sel (void)
 
 void handle_quarter  (void)
 {
+    thickness_option.put(1);
     String quarter_cut = "<!DOCTYPE html> <html> <head>\n";
     quarter_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
     quarter_cut += "Postioning...\n";
-    quarter_cut += "CAUTION: Wait till Positioning is Complete before continuing\n";
-    quarter_cut += "<p><p><p> <a href=\"/ready_cut\">to cut</a>\n" ;
+    quarter_cut += "CAUTION: Wait till Positioning is complete before continuing!!!\n";
+    quarter_cut += "<p><p><p> <a href=\"/ready_cut\">Start Cut</a>\n" ;
     quarter_cut += "</body> </html>";
 
     server.send (200, "text/html", quarter_cut);
 }
 void handle_half (void)
 {
+    thickness_option.put(2);
     String half_cut = "<!DOCTYPE html> <html> <head>\n";
     half_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
     half_cut += "Postioning...\n";
-    half_cut += "CAUTION: Wait till Positioning is Complete before continuing\n";
-    half_cut += "<p><p><p> <a href=\"/ready_cut\">to cut</a>\n" ;
+    half_cut += "CAUTION: Wait till Positioning is complete before continuing!!!\n";
+    half_cut += "<p><p><p> <a href=\"/ready_cut\">Start Cut</a>\n" ;
     half_cut += "</body> </html>";
 
     server.send (200, "text/html", half_cut);
 }
 void handle_inch (void)
 {
+    thickness_option.put(3);
     String inch_cut = "<!DOCTYPE html> <html> <head>\n";
     inch_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
     inch_cut += "Postioning...\n";
-    inch_cut += "CAUTION: Wait till Positioning is Complete before continuing\n";
-    inch_cut += "<p><p><p> <a href=\"/ready_cut\">to cut</a>\n" ;
+    inch_cut += "CAUTION: Wait till Positioning is complete before continuing!!!\n";
+    inch_cut += "<p><p><p> <a href=\"/ready_cut\">Start Cut</a>\n" ;
     inch_cut += "</body> </html>";
     
     server.send (200, "text/html", inch_cut);
 
 }
-
 void handle_cut (void)
 {
+    user_cut_flag.put(true); 
     String ready_cut = "<!DOCTYPE html> <html> <head>\n";
     ready_cut += "Cutting...";
-    ready_cut += "Return back to home page once fully cut.\n";
-    ready_cut += "</head> <body> <p> <a href='/'>Back to main page</a></p>";
+    ready_cut += "NOTE: Return back to home page once fully cut.\n";
+    ready_cut += "</head> <body> <p> <a href='/'>Back to Main Page</a></p>";
     
     server.send (200, "text/html", ready_cut);
     
 }
-/** @brief   Show some simulated data when asked by the web server.
- *  @details The contrived data is sent in a relatively efficient Comma
- *           Separated Variable (CSV) format which is easily read by Matlab(tm)
- *           and Python and spreadsheets.
- */
-void handle_CSV (void)
-{
-    // The page will be composed in an Arduino String object, then sent.
-    // The first line will be column headers so we know what the data is
-    String csv_str = "Time, Jumpiness\n";
-    String link = "<!DOCTYPE html> <html> <head>\n";
-    link += "<p><p> <a href=\"/toggle\">DICE</a>\n" ; // names link dice
-    link += "<p><p> <a href=\"/toggle\">SLICE</a>\n" ; // names link dice
-    link += "</body> </html>";
-    server.send (200, "text/html", link); 
 
-    // Create some fake data and put it into a String object. We could just
-    // as easily have taken values from a data array, if such an array existed
-    for (uint8_t index = 0; index < 20; index++)
-    {
-        csv_str += index;
-        csv_str += ",";
-        csv_str += String (sin (index / 5.4321), 3);       // 3 decimal places
-        csv_str += "\n";
-    }
-
-    // Send the CSV file as plain text so it can be easily saved as a file
-    server.send (404, "text/plain", csv_str);
-}
-
-
-/** @brief   Task which sets up and runs a web server.
- *  @details After setup, function @c handleClient() must be run periodically
- *           to check for page requests from web clients. One could run this
- *           task as the lowest priority task with a short or no delay, as there
- *           generally isn't much rush in replying to web queries.
- *  @param   p_params Pointer to unused parameters
- */
 void task_webserver (void* p_params)
 {
     // The server has been created statically when the program was started and
     // is accessed as a global object because not only this function but also
     // the page handling functions referenced below need access to the server
     server.on ("/", handle_DocumentRoot);
-    server.on ("/csv", handle_CSV);
     server.on ("/home_blade", handle_home_blade);
     server.on ("/home_push", handle_home_push);
     server.on ("/home_done", handle_home_done);
@@ -314,40 +274,7 @@ void task_webserver (void* p_params)
         vTaskDelay (500);
     }
 }
-
-
-/** @brief   Task which sends a high frequency signal to show it can run fast.
- *  @details This task sends a square wave signal with a frequency of 500 Hz 
- *           and a duty cyle of 50%. Its purpose in the WiFi demonstration is
- *           to verify that a fast task can run at higher priority than the
- *           WiFi task and keep relatively accurate timing. 
- *  @param   p_params An unused pointer to (no) parameters passed to this task
- */
-
-void task_fast (void* p_params)
-{
-    Serial << "Start Task Fast" << endl;
-
-    // Configures the pin as an output
-    pinMode (FAST_PIN, OUTPUT);
-
-    // Sets the delay for 1 ms
-    const TickType_t FAST_DELAY = 1;
-
-    while (true)
-    {
-        digitalWrite (FAST_PIN, HIGH);
-        vTaskDelay (FAST_DELAY);
-        digitalWrite(FAST_PIN, LOW);
-        vTaskDelay (FAST_DELAY);
-    }
-}
-
-
-/** @brief   Arduino setup method which initializes the communication ports and
- *           gets the task(s) running.
- */
-void setup () 
+/**void setup () 
 {
     Serial.begin (115200);
     delay (100);
@@ -359,23 +286,15 @@ void setup ()
     // Call function which gets the WiFi working
     setup_wifi ();
 
-    // Set up the pin for the blue LED on the ESP32 board
-    pinMode (ledPin, OUTPUT);
-    digitalWrite (ledPin, LOW);
-
     // Create the tasks which will do exciting things...
 
     // Task which runs the web server. It runs at a low priority
     xTaskCreate (task_webserver, "Web Server", 8192, NULL, 2, NULL);
-
-    // Task which produces a square wave (again) at a high priority
-    xTaskCreate (task_fast, "500 Hz", 1024, NULL, 5, NULL);
 }
-
-
 /** @brief   Arduino loop method which runs repeatedly, doing nothing much.
  */
-void loop ()
+/**void loop ()
 {
     vTaskDelay (1000);
 }
+*/
