@@ -16,6 +16,7 @@
 #define CH_B 15 // Blue Wire ENCODER 
 #define BLADELIMIT_PIN 34
 #define HOMEPUSHLIMIT_PIN 39
+
 #define ENDPUSHLIMIT_PIN 36
 #define trigPin 17
 #define echoPin 16
@@ -38,6 +39,7 @@ void task_motor1(void* param)
     int counter = 0;
     for(;;)
     {
+//        Serial << "still looping" << endl;
         if (state == 0)
         {
             motor1.stop();
@@ -167,11 +169,16 @@ BladeMotor motor2 = BladeMotor(AIN1, AIN2, PWMA, STBY);
 
 void task_motor2(void* param)
 {
-    int state = 0;
+    bool test_flag;
+    int state = 1;
+    int counter = 0;
+    int click = 0;
     for(;;)
-    {
+    {        
+      //  Serial << analogRead(BLADELIMIT_PIN) << endl;
         if (state == 0)
         {
+            Serial << "state 0" << endl;
             if (start_flag.get() == true)
                 {
                     state = 1;
@@ -183,26 +190,50 @@ void task_motor2(void* param)
         }
         else if (state == 1)
         {
+//            Serial << "state 1" << endl;
             motor2.stop();
-            home_blade_flag.put(false);
-            if (done_flag.get() == true)
-            { 
-                state = 0;
-            }
-            else if (push_flag.get() == false)
+//            home_blade_flag.put(false);
+//                test_flag = false;
+//            if (done_flag.get() == true)
+//            { 
+//               state = 0;
+//            }
+//            else if (push_flag.get() == false)
+            Serial << "State 1"<< endl;
+            counter++;
+            if (analogRead(BLADELIMIT_PIN) > 0)
             {
+                click = 1;
+            }
+            if (analogRead(BLADELIMIT_PIN) == 0)
+            {
+                click = 3;
+            }
+            else if (click == 1 and counter >= 25)
+            {
+                counter = 0;
                 state = 2;
             }
         }
         else if (state == 2)
         {
+        Serial << "state 2" << endl;
             motor2.fwd(255);
+            counter++;
             if (analogRead(BLADELIMIT_PIN) > 0)
             {
-                push_flag.put(true);
-                state = 1;
+//                push_flag.put(true);
+                click = 2;
             }
-
+            if (analogRead(BLADELIMIT_PIN) == 0)
+            {
+                click = 3;
+            }
+            else if (click ==2 and counter >= 25) 
+            {
+                state =1;
+                counter =0;
+            }
         }
     vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
     }
@@ -240,10 +271,10 @@ void setup()
   // Begin Serial port
   Serial.begin(115200);
   // Create task objects and run tasks
-  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
+//  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
   xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
   //xTaskCreate(task_user, "User Interface", 5000, NULL, 3, NULL);
-  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
+//  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
 }
 
 void loop() 
