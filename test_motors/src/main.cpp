@@ -3,9 +3,9 @@
 #include <TB6612.h>
 #include <ESP32Encoder.h>
 
-#define AIN1 25 //
+#define AIN1 25 // Blue Wire
 #define BIN1 26 // Green Wire
-#define AIN2 33 //
+#define AIN2 33 // Black Wire
 #define BIN2 27 // Orange Wire
 #define PWMA 32
 #define PWMB 14
@@ -13,21 +13,6 @@
 #define CH_A 0 // Yellow Wire ENCODER 
 #define CH_B 15 // Blue Wire ENCODER 
 #define HOMELIMIT_PIN 34
- 
-ESP32Encoder encoder;
- 
-void task_encoder(void* param)
-{ 
-    encoder.attachHalfQuad ( CH_A, CH_B );
-    ESP32Encoder::useInternalWeakPullResistors=UP;
-    encoder.setCount (0); 
-    for (;;)
-    {
-        long newPosition = encoder.getCount() / 2;
-        Serial.println(newPosition);
-        vTaskDelay(80/portTICK_PERIOD_MS); //Delay for 50 ms
-    }
-}
 
 PushMotor motor1 = PushMotor(BIN1, BIN2, PWMB, STBY);
 
@@ -109,8 +94,8 @@ void setup()
   Serial.begin(115200);
   // Create task objects and run tasks
   //xTaskCreate (task_encoder, "Encoder", 5000, NULL, 1, NULL);
-  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 2, NULL);
-  //xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 1, NULL);
+  //xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 2, NULL);
+  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 1, NULL);
 }
 
 void loop() 
