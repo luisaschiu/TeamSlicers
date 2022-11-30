@@ -8,7 +8,7 @@
 #define AIN1 25 // Blue Wire
 #define BIN1 26 // Green Wire
 #define AIN2 33 // Black Wire
-#define BIN2 27 // Orange Wire
+#define BIN2 27 // Orange/Yellow Wire
 #define PWMA 32
 #define PWMB 14
 #define STBY 4
@@ -16,11 +16,9 @@
 #define CH_B 15 // Blue Wire ENCODER 
 #define BLADELIMIT_PIN 34
 #define HOMEPUSHLIMIT_PIN 39
-
 #define ENDPUSHLIMIT_PIN 36
 #define trigPin 17
 #define echoPin 16
-
 
 Share<float> distance ("HCSR04 Output");
 Share<bool> start_flag ("Start Button"); //used to be ready_flag
@@ -47,7 +45,7 @@ void task_motor1(void* param)
             {
                 state = 1;
             }
-            else if ((home_pusher_flag.get() == true) and (analogRead(HOMEPUSHLIMIT_PIN) > 0))
+            else if ((home_pusher_flag.get() == true) and (analogRead(HOMEPUSHLIMIT_PIN) == 0))
             {
                 state = 2;
             }
@@ -56,7 +54,7 @@ void task_motor1(void* param)
         else if (state == 1)
         {
             motor1.rev(255);
-            if (analogRead(HOMEPUSHLIMIT_PIN) > 0)
+            if (analogRead(HOMEPUSHLIMIT_PIN) == 0)
             {
                 state = 2;
             }
@@ -104,9 +102,9 @@ void task_motor1(void* param)
                 push_flag.put(false);
                 state = 8;
             }
-            else if (analogRead(ENDPUSHLIMIT_PIN) > 0)
+            else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
-                done_flag.put(true);
+//                done_flag.put(true);
                 state = 0;
             }
         }
@@ -122,7 +120,7 @@ void task_motor1(void* param)
             } 
             else if (analogRead(ENDPUSHLIMIT_PIN) > 0)
             {
-                done_flag.put(true);
+//                done_flag.put(true);
                 state = 0;
             }
         }
@@ -136,9 +134,9 @@ void task_motor1(void* param)
                 push_flag.put(false);
                 state = 8;
             } 
-            else if (analogRead(ENDPUSHLIMIT_PIN) > 0)
+            else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
-                done_flag.put(true);
+//                done_flag.put(true);
                 state = 0;
             }
         }
@@ -169,13 +167,65 @@ BladeMotor motor2 = BladeMotor(AIN1, AIN2, PWMA, STBY);
 
 void task_motor2(void* param)
 {
-    bool test_flag;
-    int state = 1;
+//    pinMode(BLADELIMIT_PIN, INPUT);
+    int test_home = 0;
+    int test_push = 0;
+    int state = 0;
     int counter = 0;
-    int click = 0;
+    //int click = 0;
     for(;;)
-    {        
-      //  Serial << analogRead(BLADELIMIT_PIN) << endl;
+    {   
+//        Serial << analogRead(BLADELIMIT_PIN) << endl;
+        if (state == 0)
+        {
+            Serial << "state 0" << endl;
+            test_home ++;
+            if (test_home >= 1)
+//            if (home_blade_flag.get() == true)
+            {
+                state = 1;
+            }
+        }
+        else if (state == 1)
+        { 
+            Serial << "state 1" << endl;
+            motor2.fwd(255);
+            test_home = 0;
+            if (analogRead(BLADELIMIT_PIN) == 0)
+            {
+//                push_flag.put(true);
+                state = 2;
+                test_push = 0;
+            }
+        }
+        else if (state == 2)
+        {
+            Serial << "state 2" << endl;
+            motor2.stop();
+            test_push ++; // time it takes to push forward object
+            if (test_push >= 2000)
+//            if (push_flag.get() == false)
+            {
+                counter = 0;
+                state = 3;
+            }
+
+        }
+        else if (state == 3)
+        {
+            Serial << "state 3" << endl;
+            motor2.fwd(255);
+            counter ++;
+            if (counter >= 300)
+            {    
+                test_push = 0;
+                state = 1;
+            }
+            
+        }
+        
+// ALTERNATE METHOD: Deadman Switch
+  /*    //  Serial << analogRead(BLADELIMIT_PIN) << endl;
         if (state == 0)
         {
             Serial << "state 0" << endl;
@@ -201,11 +251,11 @@ void task_motor2(void* param)
 //            else if (push_flag.get() == false)
             Serial << "State 1"<< endl;
             counter++;
-            if (analogRead(BLADELIMIT_PIN) > 0)
+            if (analogRead(BLADELIMIT_PIN) == 0)
             {
                 click = 1;
             }
-            if (analogRead(BLADELIMIT_PIN) == 0)
+            if (analogRead(BLADELIMIT_PIN) > 0)
             {
                 click = 3;
             }
@@ -220,12 +270,12 @@ void task_motor2(void* param)
         Serial << "state 2" << endl;
             motor2.fwd(255);
             counter++;
-            if (analogRead(BLADELIMIT_PIN) > 0)
+            if (analogRead(BLADELIMIT_PIN) == 0)
             {
 //                push_flag.put(true);
                 click = 2;
             }
-            if (analogRead(BLADELIMIT_PIN) == 0)
+            if (analogRead(BLADELIMIT_PIN) > 0)
             {
                 click = 3;
             }
@@ -235,9 +285,12 @@ void task_motor2(void* param)
                 counter =0;
             }
         }
+        */
+
+    }
     vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
     }
-}
+
 
 HCSR04 ultrasonic = HCSR04(trigPin, echoPin);
 void task_ultrasonic(void* param)
@@ -271,8 +324,8 @@ void setup()
   // Begin Serial port
   Serial.begin(115200);
   // Create task objects and run tasks
-//  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
-  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
+  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
+//  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
   //xTaskCreate(task_user, "User Interface", 5000, NULL, 3, NULL);
 //  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
 }
