@@ -8,7 +8,7 @@
 #define AIN1 25 // Blue Wire
 #define BIN1 26 // Green Wire
 #define AIN2 33 // Black Wire
-#define BIN2 27 // Orange/Yellow Wire
+#define BIN2 27 // Orange Wire
 #define PWMA 32
 #define PWMB 14
 #define STBY 4
@@ -31,6 +31,38 @@ Share<int> thickness_option ("Option for Different Thicknesses");
 
 PushMotor motor1 = PushMotor(BIN1, BIN2, PWMB, STBY);
 
+void task_mot1(void* param)
+{
+    int state = 0;
+    int counter = 0;
+    for(;;)
+    {
+        Serial << analogRead(HOMEPUSHLIMIT_PIN) << endl;
+        counter ++;
+        if (state == 0)
+        {
+            Serial << "state 0" << endl;
+            motor1.fwd(255);
+            if (analogRead(HOMEPUSHLIMIT_PIN) == 0)
+            {
+                Serial << "hi" << endl;
+                state = 1;
+            }
+        }
+        else if (state == 1)
+        {
+            Serial << "state 1" << endl;
+            motor1.rev(255);
+            if (analogRead(HOMEPUSHLIMIT_PIN) > 0)
+            {
+                state = 0;
+            }
+        }
+
+    vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 100 ms
+    }
+}
+
 void task_motor1(void* param)
 {
     int state = 0;
@@ -41,7 +73,7 @@ void task_motor1(void* param)
         if (state == 0)
         {
             motor1.stop();
-            if ((home_pusher_flag.get() == true) and (analogRead(HOMEPUSHLIMIT_PIN) == 0))
+            if ((home_pusher_flag.get() == true) and (analogRead(HOMEPUSHLIMIT_PIN) > 0))
             {
                 state = 1;
             }
@@ -118,7 +150,7 @@ void task_motor1(void* param)
                 push_flag.put(false);
                 state = 8;
             } 
-            else if (analogRead(ENDPUSHLIMIT_PIN) > 0)
+            else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
 //                done_flag.put(true);
                 state = 0;
@@ -324,7 +356,8 @@ void setup()
   // Begin Serial port
   Serial.begin(115200);
   // Create task objects and run tasks
-  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
+//  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
+    xTaskCreate (task_mot1, "PushMotor", 3000, NULL, 1, NULL);
 //  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
   //xTaskCreate(task_user, "User Interface", 5000, NULL, 3, NULL);
 //  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
