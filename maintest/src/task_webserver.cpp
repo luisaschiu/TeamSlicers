@@ -123,7 +123,7 @@ void HTML_header (String& a_string, const char* page_title)
 void handle_DocumentRoot ()
 {
     Serial << "HTTP request from client #" << server.client () << endl;
-
+//    start_flag.put(false);    
     String a_str;
     HTML_header (a_str, "ESP32 Web Server Test");
     a_str += "<body>\n<div id=\"webpage\">\n";

@@ -97,7 +97,7 @@ void task_motor1(void* param)
           //  Serial << start_flag.get()<< endl;
           //  Serial << "State 1" << endl;
             motor1.rev(255);
-            home_pusher_flag.put(false);
+//            home_pusher_flag.put(false);
             if (analogRead(HOMEPUSHLIMIT_PIN) == 0)
             {
                 state = 2;
@@ -105,7 +105,8 @@ void task_motor1(void* param)
         }
         else if (state == 2)
         {
-           // Serial << "State 2" << endl;
+            Serial << " 2" << endl;
+        
             motor1.stop();
             if (start_flag.get() == true);
             {
@@ -114,7 +115,7 @@ void task_motor1(void* param)
         }
         else if (state == 3)
         {
-           //Serial << "State 3" << endl;
+           Serial << " 3" << endl;
             motor1.fwd(255);
            // Serial << distance.get() << endl;
             if (distance.get() <= 1)  // UPDATE VALUE TO PUSH OBJECT TO BLADE
@@ -147,7 +148,7 @@ void task_motor1(void* param)
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 7) // counter = 13, loaded: 0.25 in travel
+            if (counter == 28) // counter = 13, loaded: 0.25 in travel
             {  
                 push_flag.put(false);
                 state = 8;
@@ -158,7 +159,8 @@ void task_motor1(void* param)
 //                done_flag.put(true);
             thickness_option.put(0);
             home_blade_flag.put(false);
-            start_flag.put(false);
+            home_pusher_flag.put(false);
+//            start_flag.put(false);
             user_cut_flag.put(false);
                 state = 0;
             }
@@ -169,7 +171,7 @@ void task_motor1(void* param)
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 13) // counter = 26, loaded: 0.5 in travel
+            if (counter == 52) // counter = 26, loaded: 0.5 in travel
             {  
                 push_flag.put(false);
                 state = 8;
@@ -179,7 +181,8 @@ void task_motor1(void* param)
 //                done_flag.put(true);
             thickness_option.put(0);
             home_blade_flag.put(false);
-            start_flag.put(false);
+            home_pusher_flag.put(false);
+//            start_flag.put(false);
             user_cut_flag.put(false);
                 state = 0;
             }
@@ -190,7 +193,7 @@ void task_motor1(void* param)
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 26) // counter = 52, loaded: 1 in travel
+            if (counter == 104) // counter = 52, loaded: 1 in travel
             {  
                 push_flag.put(false);
                 state = 8;
@@ -200,7 +203,8 @@ void task_motor1(void* param)
 //                done_flag.put(true);
             thickness_option.put(0);
             home_blade_flag.put(false);
-            start_flag.put(false);
+            home_pusher_flag.put(false);
+ //           start_flag.put(false);
             user_cut_flag.put(false);
                 state = 0;
             }
@@ -225,7 +229,7 @@ void task_motor1(void* param)
                 state = 7;
             }
         }
-     vTaskDelay(100/portTICK_PERIOD_MS); //Delay for 100 ms
+     vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 100 ms
     }
 }
 
@@ -254,7 +258,7 @@ void task_motor2(void* param)
         }
         else if (state == 1)
         { 
-          //  Serial << "state 1" << endl;
+           Serial << "state 1" << endl;
             motor2.fwd(255);
 //            test_home = 0;
             if (analogRead(BLADELIMIT_PIN) == 0)
@@ -266,7 +270,7 @@ void task_motor2(void* param)
         }
         else if (state == 2)
         {
-           // Serial << "state 2" << endl;
+          Serial << "state 2" << endl;
             motor2.stop();
    //         test_push ++; // time it takes to push forward object
   //          if (test_push >= 2000)
@@ -279,7 +283,7 @@ void task_motor2(void* param)
         }
         else if (state == 3)
         {
-           // Serial << "state 3" << endl;
+            Serial << "state 3" << endl;
            motor2.fwd(255);
             counter ++;
             if (counter >= 300)
@@ -378,11 +382,13 @@ void task_ultrasonic(void* param)
             measurement = ultrasonic.measure()-1.76;
             distance.put(measurement);
           //  Serial << distance << endl;
-            vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
             if (measurement <= 0.00)
-                state = 0;
+                {
+                    start_flag.put(false);
+                    state = 0;
+                }
         }
-
+    vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
     }
 }
 
