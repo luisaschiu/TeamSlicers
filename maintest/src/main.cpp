@@ -4,6 +4,7 @@
 #include <HCSR04.h>
 #include <taskshare.h>
 #include <shares.h>
+#include <task_webserver.h>
 
 #define AIN1 25 // Blue Wire
 #define BIN1 26 // Green Wire
@@ -353,13 +354,15 @@ void task_ultrasonic(void* param)
 
 void setup() 
 {
+
   // Begin Serial port
   Serial.begin(115200);
+  setup_wifi (); // starts wifi
   // Create task objects and run tasks
 //  xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
-    xTaskCreate (task_mot1, "PushMotor", 3000, NULL, 1, NULL);
+  //  xTaskCreate (task_mot1, "PushMotor", 3000, NULL, 1, NULL);
 //  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
-  //xTaskCreate(task_user, "User Interface", 5000, NULL, 3, NULL);
+ xTaskCreate (task_webserver, "Web Server", 8192, NULL, 3, NULL);
 //  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
 }
 
