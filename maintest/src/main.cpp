@@ -18,8 +18,8 @@
 #define BLADELIMIT_PIN 34
 #define HOMEPUSHLIMIT_PIN 39
 #define ENDPUSHLIMIT_PIN 36
-#define trigPin 17
-#define echoPin 16
+#define trigPin 17 //white wire 
+#define echoPin 16 // Green wire 
 
 Share<float> distance ("HCSR04 Output");
 Share<bool> start_flag ("Start Button"); //used to be ready_flag
@@ -38,7 +38,8 @@ void task_mot1(void* param)
     int counter = 0;
     for(;;)
     {
-        Serial << analogRead(HOMEPUSHLIMIT_PIN) << endl;
+        Serial << analogRead(ENDPUSHLIMIT_PIN) << endl ;
+      //  Serial << analogRead(HOMEPUSHLIMIT_PIN) << endl;
         counter ++;
         if (state == 0)
         {
@@ -46,13 +47,13 @@ void task_mot1(void* param)
             motor1.fwd(255);
             if (analogRead(HOMEPUSHLIMIT_PIN) == 0)
             {
-                Serial << "hi" << endl;
+              //  Serial << "hi" << endl;
                 state = 1;
             }
         }
         else if (state == 1)
         {
-            Serial << "state 1" << endl;
+          //  Serial << "state 1" << endl;
             motor1.rev(255);
             if (analogRead(HOMEPUSHLIMIT_PIN) > 0)
             {
@@ -70,11 +71,16 @@ void task_motor1(void* param)
     int counter = 0;
     for(;;)
     {
+        // Serial << analogRead(ENDPUSHLIMIT_PIN) << endl ;
 //        Serial << "still looping" << endl;
         if (state == 0)
         {
             motor1.stop();
-            Serial << "State 0" << endl;
+           // thickness_option.put(0);
+            //home_blade_flag.put(false);
+            //start_flag.put(false);
+            //user_cut_flag.put(false);
+           // Serial << "State 0" << endl;
             if ((home_pusher_flag.get() == true) and (analogRead(HOMEPUSHLIMIT_PIN) > 0))
             {
                 state = 1;
@@ -88,8 +94,10 @@ void task_motor1(void* param)
         }
         else if (state == 1)
         {
-            Serial << "State 1" << endl;
+          //  Serial << start_flag.get()<< endl;
+          //  Serial << "State 1" << endl;
             motor1.rev(255);
+            home_pusher_flag.put(false);
             if (analogRead(HOMEPUSHLIMIT_PIN) == 0)
             {
                 state = 2;
@@ -97,7 +105,7 @@ void task_motor1(void* param)
         }
         else if (state == 2)
         {
-            Serial << "State 2" << endl;
+           // Serial << "State 2" << endl;
             motor1.stop();
             if (start_flag.get() == true);
             {
@@ -106,17 +114,17 @@ void task_motor1(void* param)
         }
         else if (state == 3)
         {
-            Serial << "State 3" << endl;
+           //Serial << "State 3" << endl;
             motor1.fwd(255);
-        //    Serial << distance.get() << endl;
-            if (distance.get() <= 2.00)  // UPDATE VALUE TO PUSH OBJECT TO BLADE
+           // Serial << distance.get() << endl;
+            if (distance.get() <= 1)  // UPDATE VALUE TO PUSH OBJECT TO BLADE
             {
                 state = 4;
             }
         }
         else if (state == 4)
         {
-            Serial << "State 4" << endl;
+          //  Serial << "State 4" << endl;
             motor1.stop();
             if ((user_cut_flag.get() == true) and (thickness_option.get() == 1))
             {
@@ -134,28 +142,34 @@ void task_motor1(void* param)
         }
         else if (state == 5)
         {
-            Serial << "State 5" << endl;
+           
+          //  Serial << "State 5" << endl;
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 13) // counter = 13, loaded: 0.25 in travel
+            if (counter == 7) // counter = 13, loaded: 0.25 in travel
             {  
                 push_flag.put(false);
                 state = 8;
             }
             else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
+                
 //                done_flag.put(true);
+            thickness_option.put(0);
+            home_blade_flag.put(false);
+            start_flag.put(false);
+            user_cut_flag.put(false);
                 state = 0;
             }
         }
         else if (state == 6)
         {
-            Serial << "State 6" << endl;
+           // Serial << "State 6" << endl;
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 26) // counter = 26, loaded: 0.5 in travel
+            if (counter == 13) // counter = 26, loaded: 0.5 in travel
             {  
                 push_flag.put(false);
                 state = 8;
@@ -163,16 +177,20 @@ void task_motor1(void* param)
             else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
 //                done_flag.put(true);
+            thickness_option.put(0);
+            home_blade_flag.put(false);
+            start_flag.put(false);
+            user_cut_flag.put(false);
                 state = 0;
             }
         }
         else if (state == 7)
         {
-            Serial << "State 7" << endl;
+          //  Serial << "State 7" << endl;
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 52) // counter = 52, loaded: 1 in travel
+            if (counter == 26) // counter = 52, loaded: 1 in travel
             {  
                 push_flag.put(false);
                 state = 8;
@@ -180,12 +198,16 @@ void task_motor1(void* param)
             else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
 //                done_flag.put(true);
+            thickness_option.put(0);
+            home_blade_flag.put(false);
+            start_flag.put(false);
+            user_cut_flag.put(false);
                 state = 0;
             }
         }
         else if (state == 8)
         {
-            Serial << "State 8" << endl;
+         //   Serial << "State 8" << endl;
             motor1.stop();
             if ((thickness_option.get() == 1) and (push_flag.get() == true))
             {
@@ -222,7 +244,7 @@ void task_motor2(void* param)
 //        Serial << analogRead(BLADELIMIT_PIN) << endl;
         if (state == 0)
         {
-            Serial << "state 0" << endl;
+         //   Serial << "state 0" << endl;
      //       test_home ++;
     //        if (test_home >= 1)
             if (home_blade_flag.get() == true)
@@ -232,7 +254,7 @@ void task_motor2(void* param)
         }
         else if (state == 1)
         { 
-            Serial << "state 1" << endl;
+          //  Serial << "state 1" << endl;
             motor2.fwd(255);
 //            test_home = 0;
             if (analogRead(BLADELIMIT_PIN) == 0)
@@ -244,7 +266,7 @@ void task_motor2(void* param)
         }
         else if (state == 2)
         {
-            Serial << "state 2" << endl;
+           // Serial << "state 2" << endl;
             motor2.stop();
    //         test_push ++; // time it takes to push forward object
   //          if (test_push >= 2000)
@@ -257,8 +279,8 @@ void task_motor2(void* param)
         }
         else if (state == 3)
         {
-            Serial << "state 3" << endl;
-            motor2.fwd(255);
+           // Serial << "state 3" << endl;
+           motor2.fwd(255);
             counter ++;
             if (counter >= 300)
             {    
@@ -353,9 +375,9 @@ void task_ultrasonic(void* param)
         }
         else if (state == 1)
         {
-            measurement = ultrasonic.measure();
+            measurement = ultrasonic.measure()-1.76;
             distance.put(measurement);
-        //    Serial << measurement << endl;
+          //  Serial << distance << endl;
             vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
             if (measurement <= 0.00)
                 state = 0;
@@ -372,10 +394,10 @@ void setup()
   setup_wifi (); // starts wifi
   // Create task objects and run tasks
     xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
-  //  xTaskCreate (task_mot1, "PushMotor", 3000, NULL, 1, NULL);
-//  xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
-    xTaskCreate (task_webserver, "Web Server", 8192, NULL, 3, NULL);
-//  xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
+  //xTaskCreate (task_mot1, "PushMotor", 3000, NULL, 1, NULL);
+    xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
+   xTaskCreate (task_webserver, "Web Server", 8192, NULL, 3, NULL);
+   xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
 }
 
 void loop() 
