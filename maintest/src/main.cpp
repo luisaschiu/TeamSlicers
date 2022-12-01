@@ -201,8 +201,8 @@ BladeMotor motor2 = BladeMotor(AIN1, AIN2, PWMA, STBY);
 void task_motor2(void* param)
 {
 //    pinMode(BLADELIMIT_PIN, INPUT);
-    int test_home = 0;
-    int test_push = 0;
+  //  int test_home = 0;
+    //int test_push = 0;
     int state = 0;
     int counter = 0;
     //int click = 0;
@@ -212,9 +212,9 @@ void task_motor2(void* param)
         if (state == 0)
         {
             Serial << "state 0" << endl;
-            test_home ++;
-            if (test_home >= 1)
-//            if (home_blade_flag.get() == true)
+     //       test_home ++;
+    //        if (test_home >= 1)
+            if (home_blade_flag.get() == true)
             {
                 state = 1;
             }
@@ -223,23 +223,23 @@ void task_motor2(void* param)
         { 
             Serial << "state 1" << endl;
             motor2.fwd(255);
-            test_home = 0;
+//            test_home = 0;
             if (analogRead(BLADELIMIT_PIN) == 0)
             {
-//                push_flag.put(true);
+                push_flag.put(true);
                 state = 2;
-                test_push = 0;
+   //             test_push = 0;
             }
         }
         else if (state == 2)
         {
             Serial << "state 2" << endl;
             motor2.stop();
-            test_push ++; // time it takes to push forward object
-            if (test_push >= 2000)
-//            if (push_flag.get() == false)
+   //         test_push ++; // time it takes to push forward object
+  //          if (test_push >= 2000)
+            if (push_flag.get() == false)
             {
-                counter = 0;
+   //             counter = 0;
                 state = 3;
             }
 
@@ -251,8 +251,9 @@ void task_motor2(void* param)
             counter ++;
             if (counter >= 300)
             {    
-                test_push = 0;
+ //               test_push = 0;
                 state = 1;
+                counter = 0;
             }
             
         }
