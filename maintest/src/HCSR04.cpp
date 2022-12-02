@@ -1,7 +1,21 @@
+/** @file HCSRO4.cpp 
+ * This program contains the constructor for the ultrasonic sensor class. 
+ * @author Luisa Chiu
+
+*/
+
+
+
 #include <Arduino.h>
 #include <HCSR04.h>
 #include <PrintStream.h>
 
+
+/** @brief   Initializes pins.
+ *  @details  Sets the Trig and Echo pins of the ultrasonic sensor.
+ *  @param   p_trig Trig Pin
+ * @param p_echo Echo Pin
+ */
 HCSR04::HCSR04(int p_trig, int p_echo)
 {
   trig_pin = p_trig;
@@ -14,7 +28,9 @@ HCSR04::HCSR04(int p_trig, int p_echo)
 long duration; // variable for the duration of sound wave travel
 float out_dist; // variable for the distance measurement
 
-
+/** @brief Constructs measure method.
+ *  @details Allows for the reading of measurements obtained by the ultrasonic sensor.
+*/
 float HCSR04::measure()
 {
   // Clears the trigPin condition

@@ -148,11 +148,8 @@ void handle_NotFound (void)
 }
 
 
-/** @brief   Toggle blue LED when called by the web server.
- *  @details For testing purposes, this function turns the little blue LED on a
- *           38-pin ESP32 board on and off. It is called when someone enters
- *           @c http://server.address/toggle as the web address request from a
- *           browser.
+/** @brief   Homes the blade when called by the web server.
+ *  @details This function turns homes the blade when selected by the user from the web browser.
  */
 void handle_home_blade (void)
 {
@@ -163,6 +160,9 @@ void handle_home_blade (void)
     home_blade += "Homing Blade\n" ;
     server.send (200, "text/html", home_blade); // needed to create string to an HTML.
 }
+/** @brief   Homes the pusher when called by the web server.
+ *  @details This function turns homes the blade when selected by the user from the web browser.
+ */
 void handle_home_push (void)
 {
     home_pusher_flag.put(true);

@@ -1,14 +1,26 @@
+/** @file    HCSR04.h
+ *  @brief   Header file for ultrasonic sensor class and measurement method.
+ *  @author Luisa Chiu
+ * 
+ */
+
 
 #ifndef HCSR04_h
 #define HCSR04_h
 
 #include <Arduino.h>
 
+/** @brief  Class for ultrasonic sensor. Allows for acquisition of measurement data.
+ */
 class HCSR04
 {
   public:
-  //Constructor for ultrasonic sensor
+  /** @brief Constructor for ultrasonic sensor
+   */
   HCSR04(int trigPin, int echoPin);
+  /** @brief Read data from ultrasonic sensor
+   
+  */
   float measure();
 
   private:
