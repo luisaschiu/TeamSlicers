@@ -8,6 +8,8 @@
  * 
  *  @author A. Sinha
  *  @author JR Ridgely
+ * @author Kevin Salceda
+ * @author Caleb Kephart
  *  @date   2022-Mar-28 Original stuff by Sinha
  *  @date   2022-Nov-04 Modified for ME507 use by Ridgely
  *  @copyright 2022 by the authors, released under the MIT License.
@@ -149,7 +151,7 @@ void handle_NotFound (void)
 
 
 /** @brief   Homes the blade when called by the web server.
- *  @details This function turns homes the blade when selected by the user from the web browser.
+ *  @details This function turns homes the blade when selected by the user from the web browser. User is then prompted to return to the previous page.
  */
 void handle_home_blade (void)
 {
@@ -161,7 +163,7 @@ void handle_home_blade (void)
     server.send (200, "text/html", home_blade); // needed to create string to an HTML.
 }
 /** @brief   Homes the pusher when called by the web server.
- *  @details This function turns homes the blade when selected by the user from the web browser.
+ *  @details Homes the pusher when usuer visits this web page. User is then prompted to return to previous page.
  */
 void handle_home_push (void)
 {
@@ -172,6 +174,9 @@ void handle_home_push (void)
     home_push += "Homing Pusher" ;
     server.send (200, "text/html", home_push); // needed to create string to an HTML.
 }
+/** @brief   Notifies the user to place produce in front of the pusher.
+ *  @details tells the user to load the device and proceed to the next web page when loaded.
+ */
 void handle_home_done (void)
 {
 
@@ -184,6 +189,9 @@ void handle_home_done (void)
 
     server.send (200, "text/html", home_done); // needed to create string to an HTML.
 }
+/** @brief   Prompts the user to select a desired slice thickness.
+ *  @details Gives the user three options for slice thickness; 1/4 in, 1/2 in, and 1 in.
+ */
 void handle_thick_sel (void)
 {   
     start_flag.put(true);
@@ -197,7 +205,9 @@ void handle_thick_sel (void)
 
     server.send (200, "text/html", thick_sel); // needed to create string to an HTML.
 }
-
+/** @brief   Page for 1/4 in cuts.
+ *  @details Sets the thickness share to 1. sets the motor speed used by the pusher motor for 1/4 in cuts.
+ */
 void handle_quarter  (void)
 {
     thickness_option.put(1);
@@ -210,6 +220,9 @@ void handle_quarter  (void)
 
     server.send (200, "text/html", quarter_cut);
 }
+/** @brief   Page for 1/2 in cuts.
+ *  @details Sets the thickness share to 2. sets the motor speed used by the pusher motor for 1/2 in cuts.
+ */
 void handle_half (void)
 {
     thickness_option.put(2);
@@ -222,6 +235,9 @@ void handle_half (void)
 
     server.send (200, "text/html", half_cut);
 }
+/** @brief   Page for 1 in cuts.
+ *  @details Sets the thickness share to 3. sets the motor speed used by the pusher motor for 1 in cuts.
+ */
 void handle_inch (void)
 {
     thickness_option.put(3);
@@ -235,6 +251,9 @@ void handle_inch (void)
     server.send (200, "text/html", inch_cut);
 
 }
+/** @brief   Confirmation page that user is ready to cut.
+ *  @details Prompts the user to confirm that they are ready to start cutting. Page added as a safety feature.
+ */
 void handle_cut (void)
 {
     user_cut_flag.put(true); 
@@ -246,7 +265,9 @@ void handle_cut (void)
     server.send (200, "text/html", ready_cut);
     
 }
-
+/** @brief   calls other  tasks to create the web server.
+ *  
+ */
 void task_webserver (void* p_params)
 {
     // The server has been created statically when the program was started and

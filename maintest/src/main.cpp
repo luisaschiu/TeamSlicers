@@ -1,3 +1,11 @@
+/** @file main.cpp
+ * @brief main file for the automatic cutting board. 
+ * @author Luisa Chiu
+ * @author Kevin Salceda
+ * @author Caleb Kephart 
+ * 
+*/
+
 #include <Arduino.h>
 #include <PrintStream.h>
 #include <TB6612.h>
@@ -30,57 +38,27 @@ Share<bool> home_blade_flag ("Home Blade Bool");
 Share<bool> done_flag ("Slicing Finished Bool");
 Share<int> thickness_option ("Option for Different Thicknesses");
 
+
+/** @brief initializes the push motor class.
+ * 
+*/
 PushMotor motor1 = PushMotor(BIN1, BIN2, PWMB, STBY);
 
-void task_mot1(void* param)
-{
-    int state = 0;
-    int counter = 0;
-    for(;;)
-    {
-        Serial << analogRead(ENDPUSHLIMIT_PIN) << endl ;
-      //  Serial << analogRead(HOMEPUSHLIMIT_PIN) << endl;
-        counter ++;
-        if (state == 0)
-        {
-            Serial << "state 0" << endl;
-            motor1.fwd(255);
-            if (analogRead(HOMEPUSHLIMIT_PIN) == 0)
-            {
-              //  Serial << "hi" << endl;
-                state = 1;
-            }
-        }
-        else if (state == 1)
-        {
-          //  Serial << "state 1" << endl;
-            motor1.rev(255);
-            if (analogRead(HOMEPUSHLIMIT_PIN) > 0)
-            {
-                state = 0;
-            }
-        }
-
-    vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 100 ms
-    }
-}
-
+/** @brief Task for the pusher motor.
+ *  @details Handles all actions for the pusher motor. Reads shares changed by the user interface webserver. 
+ *           Based on User interface, the motor is pushing for a certain period of time, then stops. It then waits for the blade 
+ *           task to finish the cut, then moves. This repeats until the pusher hits the limit switch at the end of its travel.
+ * 
+*/
 void task_motor1(void* param)
 {
     int state = 0;
     int counter = 0;
     for(;;)
     {
-        // Serial << analogRead(ENDPUSHLIMIT_PIN) << endl ;
-//        Serial << "still looping" << endl;
         if (state == 0)
         {
             motor1.stop();
-           // thickness_option.put(0);
-            //home_blade_flag.put(false);
-            //start_flag.put(false);
-            //user_cut_flag.put(false);
-           // Serial << "State 0" << endl;
             if ((home_pusher_flag.get() == true) and (analogRead(HOMEPUSHLIMIT_PIN) > 0))
             {
                 state = 1;
@@ -94,10 +72,7 @@ void task_motor1(void* param)
         }
         else if (state == 1)
         {
-          //  Serial << start_flag.get()<< endl;
-          //  Serial << "State 1" << endl;
             motor1.rev(255);
-//            home_pusher_flag.put(false);
             if (analogRead(HOMEPUSHLIMIT_PIN) == 0)
             {
                 state = 2;
@@ -117,15 +92,13 @@ void task_motor1(void* param)
         {
            Serial << " 3" << endl;
             motor1.fwd(255);
-           // Serial << distance.get() << endl;
-            if (distance.get() <= 1)  // UPDATE VALUE TO PUSH OBJECT TO BLADE
+            if (distance.get() <= 1)  
             {
                 state = 4;
             }
         }
         else if (state == 4)
         {
-          //  Serial << "State 4" << endl;
             motor1.stop();
             if ((user_cut_flag.get() == true) and (thickness_option.get() == 1))
             {
@@ -144,11 +117,10 @@ void task_motor1(void* param)
         else if (state == 5)
         {
            
-          //  Serial << "State 5" << endl;
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 28) // counter = 13, loaded: 0.25 in travel
+            if (counter == 28) 
             {  
                 push_flag.put(false);
                 state = 8;
@@ -156,62 +128,54 @@ void task_motor1(void* param)
             else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
                 
-//                done_flag.put(true);
             thickness_option.put(0);
             home_blade_flag.put(false);
             home_pusher_flag.put(false);
-//            start_flag.put(false);
             user_cut_flag.put(false);
                 state = 0;
             }
         }
         else if (state == 6)
         {
-           // Serial << "State 6" << endl;
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 52) // counter = 26, loaded: 0.5 in travel
+            if (counter == 52) 
             {  
                 push_flag.put(false);
                 state = 8;
             } 
             else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
-//                done_flag.put(true);
             thickness_option.put(0);
             home_blade_flag.put(false);
             home_pusher_flag.put(false);
-//            start_flag.put(false);
             user_cut_flag.put(false);
                 state = 0;
             }
         }
         else if (state == 7)
         {
-          //  Serial << "State 7" << endl;
             push_flag.put(true);
             motor1.fwd(255);
             counter ++;
-            if (counter == 104) // counter = 52, loaded: 1 in travel
+            if (counter == 104) 
             {  
                 push_flag.put(false);
                 state = 8;
             } 
             else if (analogRead(ENDPUSHLIMIT_PIN) == 0)
             {
-//                done_flag.put(true);
+
             thickness_option.put(0);
             home_blade_flag.put(false);
             home_pusher_flag.put(false);
- //           start_flag.put(false);
             user_cut_flag.put(false);
                 state = 0;
             }
         }
         else if (state == 8)
         {
-         //   Serial << "State 8" << endl;
             motor1.stop();
             if ((thickness_option.get() == 1) and (push_flag.get() == true))
             {
@@ -233,24 +197,28 @@ void task_motor1(void* param)
     }
 }
 
+/** @brief Initializes the blademotor task.
+ * 
+*/
 BladeMotor motor2 = BladeMotor(AIN1, AIN2, PWMA, STBY);
-
+/** @brief Task for the blade motor.
+ *  @details Handles all actions for the blade motor. Reads shares changed by the user interface webserver. 
+ *           The motor is capable of homing itself when asked to by the user. It then waits for the pusher 
+ *           task to finish its motion, then moves and slices the produce. This repeats until the pusher hits the limit switch at the end of its travel.
+ * 
+*/
 void task_motor2(void* param)
 {
-//    pinMode(BLADELIMIT_PIN, INPUT);
-  //  int test_home = 0;
-    //int test_push = 0;
+
     int state = 0;
     int counter = 0;
-    //int click = 0;
+    
     for(;;)
     {   
-//        Serial << analogRead(BLADELIMIT_PIN) << endl;
+
         if (state == 0)
         {
-         //   Serial << "state 0" << endl;
-     //       test_home ++;
-    //        if (test_home >= 1)
+     
             if (home_blade_flag.get() == true)
             {
                 state = 1;
@@ -260,23 +228,22 @@ void task_motor2(void* param)
         { 
            Serial << "state 1" << endl;
             motor2.fwd(255);
-//            test_home = 0;
+
             if (analogRead(BLADELIMIT_PIN) == 0)
             {
                 push_flag.put(true);
                 state = 2;
-   //             test_push = 0;
+
             }
         }
         else if (state == 2)
         {
           Serial << "state 2" << endl;
             motor2.stop();
-   //         test_push ++; // time it takes to push forward object
-  //          if (test_push >= 2000)
+
             if (push_flag.get() == false)
             {
-   //             counter = 0;
+
                 state = 3;
             }
 
@@ -288,82 +255,29 @@ void task_motor2(void* param)
             counter ++;
             if (counter >= 300)
             {    
- //               test_push = 0;
+ 
                 state = 1;
                 counter = 0;
             }
             
         }
         
-// ALTERNATE METHOD: Deadman Switch
-  /*    //  Serial << analogRead(BLADELIMIT_PIN) << endl;
-        if (state == 0)
-        {
-            Serial << "state 0" << endl;
-            if (start_flag.get() == true)
-                {
-                    state = 1;
-                }
-            else if (home_blade_flag.get() == true)
-                {
-                    state = 2;
-                }
-        }
-        else if (state == 1)
-        {
-//            Serial << "state 1" << endl;
-            motor2.stop();
-//            home_blade_flag.put(false);
-//                test_flag = false;
-//            if (done_flag.get() == true)
-//            { 
-//               state = 0;
-//            }
-//            else if (push_flag.get() == false)
-            Serial << "State 1"<< endl;
-            counter++;
-            if (analogRead(BLADELIMIT_PIN) == 0)
-            {
-                click = 1;
-            }
-            if (analogRead(BLADELIMIT_PIN) > 0)
-            {
-                click = 3;
-            }
-            else if (click == 1 and counter >= 25)
-            {
-                counter = 0;
-                state = 2;
-            }
-        }
-        else if (state == 2)
-        {
-        Serial << "state 2" << endl;
-            motor2.fwd(255);
-            counter++;
-            if (analogRead(BLADELIMIT_PIN) == 0)
-            {
-//                push_flag.put(true);
-                click = 2;
-            }
-            if (analogRead(BLADELIMIT_PIN) > 0)
-            {
-                click = 3;
-            }
-            else if (click ==2 and counter >= 25) 
-            {
-                state =1;
-                counter =0;
-            }
-        }
-        */
+
 
     }
     vTaskDelay(20/portTICK_PERIOD_MS); //Delay for 20 ms
     }
 
-
+/** @brief Initializes class for ultrasonic sensor
+ * 
+*/
 HCSR04 ultrasonic = HCSR04(trigPin, echoPin);
+/** @brief Task for ultrasonic sensor
+ *  @details Ultrasonic measures the distance between the blade and the start of the object to be sliced. 
+ *          Pusher brings up the produce until it trips the ultrasonic sensor.
+ * 
+*/
+
 void task_ultrasonic(void* param)
 {
     int state = 0;
@@ -381,7 +295,7 @@ void task_ultrasonic(void* param)
         {
             measurement = ultrasonic.measure()-1.76;
             distance.put(measurement);
-          //  Serial << distance << endl;
+       
             if (measurement <= 0.00)
                 {
                     start_flag.put(false);
@@ -400,7 +314,6 @@ void setup()
   setup_wifi (); // starts wifi
   // Create task objects and run tasks
     xTaskCreate (task_motor1, "PushMotor", 3000, NULL, 1, NULL);
-  //xTaskCreate (task_mot1, "PushMotor", 3000, NULL, 1, NULL);
     xTaskCreate (task_motor2, "BladeMotor", 3000, NULL, 2, NULL);
    xTaskCreate (task_webserver, "Web Server", 8192, NULL, 3, NULL);
    xTaskCreate (task_ultrasonic, "Ultrasonic", 5000, NULL, 4, NULL);
