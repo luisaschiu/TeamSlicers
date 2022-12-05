@@ -8,8 +8,8 @@
  * 
  *  @author A. Sinha
  *  @author JR Ridgely
- * @author Kevin Salceda
- * @author Caleb Kephart
+ *  @author Kevin Salceda
+ *  @author Caleb Kephart
  *  @date   2022-Mar-28 Original stuff by Sinha
  *  @date   2022-Nov-04 Modified for ME507 use by Ridgely
  *  @copyright 2022 by the authors, released under the MIT License.
