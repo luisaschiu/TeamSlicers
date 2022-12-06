@@ -40,7 +40,6 @@ void BladeMotor::fwd(int speed)
 }
 
 /** @brief  Method for motor to stop. 
- * 
  */
 void BladeMotor::stop()
 {
@@ -51,9 +50,9 @@ void BladeMotor::stop()
 
 /** @brief  This constructor creates a PushMotor object using pins from the motor driver.
  *  @details Sets the motor pins so that the correct signals can be sent from the motor driver.
- *  @param In1pinA Pin B01 of the motor driver.
- *  @param In2pinA Pin B02 of the motor driver.
- *  @param PWMpinA PWM_B pin of the motor driver.
+ *  @param In1pinB Pin B01 of the motor driver.
+ *  @param In2pinB Pin B02 of the motor driver.
+ *  @param PWMpinB PWM_B pin of the motor driver.
  *  @param STBYpin Standby pin of the motor driver.
  */
 PushMotor::PushMotor(int In1pinB, int In2pinB, int PWMpinB, int STBYpin)
