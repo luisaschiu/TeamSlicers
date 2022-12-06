@@ -1,5 +1,4 @@
 /** @file TB6612.cpp
- *  @brief Program compiles the motor driver.
  *  @author Luisa Chiu
 */
 
