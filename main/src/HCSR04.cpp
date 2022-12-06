@@ -3,7 +3,6 @@
  * @author Luisa Chiu
 */
 
-
 #include <Arduino.h>
 #include <HCSR04.h>
 #include <PrintStream.h>
