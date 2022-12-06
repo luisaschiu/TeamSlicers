@@ -8,8 +8,12 @@
 #include <TB6612.h>
 
 
-/** @brief  Class for the blade motor. 
- * @details Sets the motor pins so that the correct signals can be sent from the motor driver.
+/** @brief  This constructor creates a BladeMotor object using pins from the motor driver.
+ *  @details Sets the motor pins so that the correct signals can be sent from the motor driver.
+ *  @param In1pinA Pin A01 of the motor driver.
+ *  @param In2pinA Pin A02 of the motor driver.
+ *  @param PWMpinA PWM_A pin of the motor driver.
+ *  @param STBYpin Standby pin of the motor driver.
  */
 BladeMotor::BladeMotor(int In1pinA, int In2pinA, int PWMpinA, int STBYpin)
 {
@@ -26,7 +30,7 @@ BladeMotor::BladeMotor(int In1pinA, int In2pinA, int PWMpinA, int STBYpin)
     digitalWrite(Standby, HIGH);
 };
 /** @brief  Method for motor to spin mechanism forward. 
- * 
+ *  @param  speed Input variable for motor speed.
  */
 void BladeMotor::fwd(int speed)
 {
@@ -45,8 +49,12 @@ void BladeMotor::stop()
    analogWrite(PWM_A, 0);
 }
 
-/** @brief  Class for the pusher motor. 
- * @details Sets the motor pins so that the correct signals can be sent from the motor driver.
+/** @brief  This constructor creates a BladeMotor object using pins from the motor driver.
+ *  @details Sets the motor pins so that the correct signals can be sent from the motor driver.
+ *  @param In1pinA Pin B01 of the motor driver.
+ *  @param In2pinA Pin B02 of the motor driver.
+ *  @param PWMpinA PWM_B pin of the motor driver.
+ *  @param STBYpin Standby pin of the motor driver.
  */
 PushMotor::PushMotor(int In1pinB, int In2pinB, int PWMpinB, int STBYpin)
 {
@@ -63,7 +71,7 @@ PushMotor::PushMotor(int In1pinB, int In2pinB, int PWMpinB, int STBYpin)
     digitalWrite(Standby, HIGH);
 };
 /** @brief  Method for motor to move the pusher forward. 
- * 
+ *  @param  speed Input variable for motor speed.
  */
 void PushMotor::fwd(int speed)
 {
@@ -72,7 +80,7 @@ void PushMotor::fwd(int speed)
     analogWrite(PWM_B, speed);
 }
 /** @brief  Method for motor to move the pusher backwards. 
- * 
+ *  @param  speed Input variable for motor speed.
  */
 void PushMotor::rev(int speed)
 {

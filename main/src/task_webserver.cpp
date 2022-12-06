@@ -43,12 +43,6 @@ IPAddress subnet (255, 255, 255, 0); // Network mask; just leave this as is
 #endif
 
 
-/// The pin connected to an LED controlled through the Web interface
-const uint8_t ledPin = 2;
-
-#define FAST_PIN 12         ///< The GPIO pin cranking out a 500 Hz square wave
-
-
 /** @brief   The web server object for this project.
  *  @details This server is responsible for responding to HTTP requests from
  *           other computers, replying with useful information.
@@ -124,8 +118,7 @@ void HTML_header (String& a_string, const char* page_title)
  */
 void handle_DocumentRoot ()
 {
-    Serial << "HTTP request from client #" << server.client () << endl;
-//    start_flag.put(false);    
+    Serial << "HTTP request from client #" << server.client () << endl;   
     String a_str;
     HTML_header (a_str, "ESP32 Web Server Test");
     a_str += "<body>\n<div id=\"webpage\">\n";
@@ -157,7 +150,6 @@ void handle_home_blade (void)
 {
     home_blade_flag.put(true);
     String home_blade = "<!DOCTYPE html> <html> <head>\n";
-   // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
     home_blade += "</head> <body> <p> <a href='/'>Back to Main Page</a></p>"; // back to main link
     home_blade += "Homing Blade\n" ;
     server.send (200, "text/html", home_blade); // needed to create string to an HTML.
@@ -169,7 +161,6 @@ void handle_home_push (void)
 {
     home_pusher_flag.put(true);
     String home_push = "<!DOCTYPE html> <html> <head>\n";
-   // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
     home_push += "</head> <body> <p> <a href='/'>Back to Main Page</a></p>"; // back to main link
     home_push += "Homing Pusher" ;
     server.send (200, "text/html", home_push); // needed to create string to an HTML.
@@ -181,7 +172,6 @@ void handle_home_done (void)
 {
 
     String home_done = "<!DOCTYPE html> <html> <head>\n";
-   // toggle_page += "<meta http-equiv=\"refresh\" content=\"1; url='/'\" />\n"; // this line casues it to automatically jump back to home...
     home_done += "</head> <body> <p> <a href='/'>Back to Main Page</a></p>"; // back to main link
     home_done += "Load Device With Fruit\n";
     home_done += "<p><p> <a href=\"/thick_sel\">Click Here Once Loaded</a>\n" ; // start link 
@@ -196,7 +186,6 @@ void handle_thick_sel (void)
 {   
     start_flag.put(true);
     String thick_sel = "<!DOCTYPE html> <html> <head>\n";
-    //thick_sel += "</head> <body> <p> <a href='/'>Back to main page</a></p>"; // back to main link
     thick_sel += "Select Desired Thickness\n";
     thick_sel += "<p><p><p> <a href=\"/quarter_cut\">1/4 inch</a>\n" ; // start link 
     thick_sel += "<p><p><p> <a href=\"/half_cut\">1/2 inch</a>\n" ;
@@ -295,27 +284,3 @@ void task_webserver (void* p_params)
         vTaskDelay (500);
     }
 }
-/**void setup () 
-{
-    Serial.begin (115200);
-    delay (100);
-    while (!Serial) { }                   // Wait for serial port to be working
-    delay (1000);
-    Serial.print("Got IP: ");  
-    Serial << endl << F("\033[2JTesting Arduino Web Server") << endl;
-
-    // Call function which gets the WiFi working
-    setup_wifi ();
-
-    // Create the tasks which will do exciting things...
-
-    // Task which runs the web server. It runs at a low priority
-    xTaskCreate (task_webserver, "Web Server", 8192, NULL, 2, NULL);
-}
-/** @brief   Arduino loop method which runs repeatedly, doing nothing much.
- */
-/**void loop ()
-{
-    vTaskDelay (1000);
-}
-*/
