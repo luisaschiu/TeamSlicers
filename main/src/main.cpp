@@ -1,8 +1,8 @@
 /** @file main.cpp
- * @brief main file for the automatic cutting board. 
- * @author Luisa Chiu
- * @author Kevin Salceda
- * @author Caleb Kephart 
+ *  @brief Main file for the automatic cutting board. 
+ *  @author Luisa Chiu
+ *  @author Kevin Salceda
+ *  @author Caleb Kephart 
  * 
 */
 
@@ -30,7 +30,7 @@
 #define echoPin 16 // Green wire 
 
 Share<float> distance ("HCSR04 Output");
-Share<bool> start_flag ("Start Button"); //used to be ready_flag
+Share<bool> start_flag ("Start Button");
 Share<bool> push_flag ("Motor Communication Bool");
 Share<bool> user_cut_flag ("User Input/Start Cutting");
 Share<bool> home_pusher_flag ("Home Pusher Bool");

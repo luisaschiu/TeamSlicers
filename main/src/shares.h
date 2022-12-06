@@ -20,7 +20,6 @@ extern Share<bool> push_flag;
 extern Share<bool> user_cut_flag;
 extern Share<bool> home_pusher_flag;
 extern Share<bool> home_blade_flag;
-extern Share<bool> done_flag;
 extern Share<int> thickness_option;
 
 #endif // _shares_h_
