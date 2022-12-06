@@ -1,7 +1,8 @@
 /** @file HCSRO4.cpp 
- * @brief This program contains the constructor for the ultrasonic sensor class. 
- * @author Luisa Chiu
-*/
+ *  @brief This program contains the constructor for the ultrasonic sensor class. 
+ *  @author Luisa Chiu
+ * 
+ */
 
 #include <Arduino.h>
 #include <HCSR04.h>

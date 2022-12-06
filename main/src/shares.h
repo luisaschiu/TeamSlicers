@@ -1,7 +1,7 @@
 /** @file shares.h
  *  This file contains extern declarations of shares and queues which are used
  *  in more than one file of a demonstration project.
- * 
+ *  @brief Constructor file for extern declarations of shares and queues.
  *  @author JR Ridgely
  *  @author Luisa Chiu
  *  @date   2021-Oct-23 Original file

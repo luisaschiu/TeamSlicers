@@ -1,6 +1,7 @@
 /** @file TB6612.h
  *  @brief Constructor file for motor driver
  *  @author Luisa Chiu
+ * 
 */
 
 #ifndef TB6612_h
@@ -8,6 +9,8 @@
 
 #include <Arduino.h>
 
+/** @brief  Class for the blade motor. Controls the motor that makes the blade oscillate.
+ */
 class BladeMotor
 {
     public:
@@ -22,6 +25,8 @@ class BladeMotor
 
 };
 
+/** @brief  Class for the pusher motor. Controls the motor that pushes the object.
+ */
 class PushMotor
 {
     public:

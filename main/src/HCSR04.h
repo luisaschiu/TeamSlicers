@@ -19,7 +19,6 @@ class HCSR04
    */
   HCSR04(int trigPin, int echoPin);
   /** @brief Read data from ultrasonic sensor
-   
   */
   float measure();
 
@@ -29,7 +28,7 @@ class HCSR04
   int echo_pin;
   long duration; /// variable for the duration of sound wave travel
   /**
-   * A variable for the distance measurement
+  * @brief A variable for the distance measurement
   */
   float out_dist;
 

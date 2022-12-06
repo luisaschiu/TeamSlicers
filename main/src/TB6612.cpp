@@ -78,6 +78,7 @@ void PushMotor::fwd(int speed)
     digitalWrite(p_In2B, HIGH);
     analogWrite(PWM_B, speed);
 }
+
 /** @brief  Method for motor to move the pusher backwards. 
  *  @param  speed Input variable for motor speed.
  */
@@ -87,6 +88,7 @@ void PushMotor::rev(int speed)
    digitalWrite(p_In2B, LOW);
    analogWrite(PWM_B, speed);
 }
+
 /** @brief  Method for motor to stop. 
  * 
  */
