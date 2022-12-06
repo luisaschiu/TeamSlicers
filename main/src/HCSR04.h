@@ -27,8 +27,11 @@ class HCSR04
   // Defines variables for HC-SR04
   int trig_pin;
   int echo_pin;
-  long duration; // variable for the duration of sound wave travel
-  float out_dist; // variable for the distance measurement
+  long duration; /// variable for the duration of sound wave travel
+  /**
+   * A variable for the distance measurement
+  */
+  float out_dist;
 
 };
 

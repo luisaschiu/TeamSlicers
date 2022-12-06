@@ -1,4 +1,5 @@
 /** @file TB6612.cpp
+ *  @brief Program compiles the motor driver.
  *  @author Luisa Chiu
 */
 
@@ -48,7 +49,7 @@ void BladeMotor::stop()
    analogWrite(PWM_A, 0);
 }
 
-/** @brief  This constructor creates a BladeMotor object using pins from the motor driver.
+/** @brief  This constructor creates a PushMotor object using pins from the motor driver.
  *  @details Sets the motor pins so that the correct signals can be sent from the motor driver.
  *  @param In1pinA Pin B01 of the motor driver.
  *  @param In2pinA Pin B02 of the motor driver.
