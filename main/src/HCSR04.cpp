@@ -9,9 +9,9 @@
 
 
 /** @brief   Initializes pins.
- *  @details  Sets the Trig and Echo pins of the ultrasonic sensor.
+ *  @details Sets the Trig and Echo pins of the ultrasonic sensor.
  *  @param   p_trig Trig Pin
- *  @param p_echo Echo Pin
+ *  @param   p_echo Echo Pin
  */
 HCSR04::HCSR04(int p_trig, int p_echo)
 {

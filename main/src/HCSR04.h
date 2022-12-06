@@ -10,7 +10,7 @@
 
 #include <Arduino.h>
 
-/** @brief  Class for ultrasonic sensor. Allows for acquisition of measurement data.
+/** @brief  Class for the ultrasonic sensor. Allows for acquisition of measurement data.
  */
 class HCSR04
 {
