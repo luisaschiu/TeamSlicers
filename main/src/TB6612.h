@@ -1,6 +1,6 @@
 /** @file TB6612.h
-*   @brief Constructor file for motor driver
-*   @author Luisa Chiu
+ *  @brief Constructor file for motor driver
+ *  @author Luisa Chiu
 */
 
 #ifndef TB6612_h

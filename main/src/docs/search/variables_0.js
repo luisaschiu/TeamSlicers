@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ledpin_0',['ledPin',['../task__webserver_8cpp.html#a59cd9f4f39202cbaad65ca3e0c2a5a60',1,'task_webserver.cpp']]]
+  ['motor1_0',['motor1',['../main_8cpp.html#a8823f76000eab7766a8becf7245d9cfe',1,'main.cpp']]],
+  ['motor2_1',['motor2',['../main_8cpp.html#ac5daaae5eba813df5e3599dd6d2763f7',1,'main.cpp']]]
 ];
