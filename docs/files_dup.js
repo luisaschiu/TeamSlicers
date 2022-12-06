@@ -1,5 +1,6 @@
 var files_dup =
 [
+    [ "HCSR04.cpp", "_h_c_s_r04_8cpp.html", null ],
     [ "HCSR04.h", "_h_c_s_r04_8h.html", [
       [ "HCSR04", "class_h_c_s_r04.html", "class_h_c_s_r04" ]
     ] ],
