@@ -3,10 +3,8 @@
  *  @author Luisa Chiu
 */
 
-
 #include <Arduino.h>
 #include <TB6612.h>
-
 
 /** @brief  This constructor creates a BladeMotor object using pins from the motor driver.
  *  @details Sets the motor pins so that the correct signals can be sent from the motor driver.

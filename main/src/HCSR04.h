@@ -1,7 +1,6 @@
 /** @file    HCSR04.h
  *  @brief   Header file for ultrasonic sensor class and measurement method.
- *  @author Luisa Chiu
- * 
+ *  @author  Luisa Chiu
  */
 
 
@@ -34,4 +33,4 @@ class HCSR04
 
 };
 
-#endif
+#endif  // _HCSR04_h_
