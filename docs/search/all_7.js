@@ -7,5 +7,6 @@ var searchData=
   ['task_5fwebserver_2ecpp_4',['task_webserver.cpp',['../task__webserver_8cpp.html',1,'']]],
   ['task_5fwebserver_2eh_5',['task_webserver.h',['../task__webserver_8h.html',1,'']]],
   ['tb6612_2ecpp_6',['TB6612.cpp',['../_t_b6612_8cpp.html',1,'']]],
-  ['tb6612_2eh_7',['TB6612.h',['../_t_b6612_8h.html',1,'']]]
+  ['tb6612_2eh_7',['TB6612.h',['../_t_b6612_8h.html',1,'']]],
+  ['teamslicers_8',['TeamSlicers',['../index.html',1,'']]]
 ];
