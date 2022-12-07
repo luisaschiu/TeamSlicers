@@ -1,5 +1,4 @@
-/**
- * @file mainpage.py
+/** @file mainpage.py
    @brief File that holds the main page.
    @mainpage
    This website contains code documentation for the automated slicer project created for the 507 term project.
